@@ -61,7 +61,7 @@ you may compile that code manually by invoking
 
     griffon compile-commons
 
-[1]: /plugins/clojure
-[2]: /plugins/scala
+[1]: /plugin/clojure
+[2]: /plugin/scala
 '''
 }

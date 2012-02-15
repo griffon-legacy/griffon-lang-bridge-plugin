@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript("_GriffonCompile")
+includeTargets << griffonScript('_GriffonCompile')
 
 target(name: 'compileCommons', description: 'Compile common sources', prehook: null, posthook: null) {
     depends(checkVersion, parseArguments, classpath)
@@ -30,26 +30,26 @@ target(name: 'compileCommons', description: 'Compile common sources', prehook: n
     def commonsdir = new File(commons)
     if(!commonsdir.exists()) return
 
-    ant.mkdir(dir: classesDirPath)
+    ant.mkdir(dir: projectMainClassesDir)
 
     def upToDate = true
-    if(hasSourcesOfType(commons, ".java"))
-        upToDate &= sourcesUpToDate(commons, classesDirPath, ".java")
-    if(hasSourcesOfType(commons, ".groovy"))
-        upToDate &= sourcesUpToDate(commons, classesDirPath, ".groovy")
+    if(hasSourcesOfType(commons, '.java'))
+        upToDate &= sourcesUpToDate(commons, projectMainClassesDir, '.java')
+    if(hasSourcesOfType(commons, '.groovy'))
+        upToDate &= sourcesUpToDate(commons, projectMainClassesDir, '.groovy')
 
     if(!upToDate) {
         ant.echo(message: "Compiling common sources to $classesDirPath")
     
-        String classpathId = "griffon.compile.classpath"
-        compileSources(classesDir, classpathId) {
+        String classpathId = 'griffon.compile.classpath'
+        compileSources(projectMainClassesDir, classpathId) {
             src(path: commons)
             javac(classpathref: classpathId)
         }
     }
 }
 
-hasSourcesOfType = { src, srcsfx = ".java" ->
+hasSourcesOfType = { src, srcsfx = '.java' ->
     def srcdir = new File(src.toString())
     def skipIt = new RuntimeException()
     try {
@@ -64,9 +64,9 @@ hasSourcesOfType = { src, srcsfx = ".java" ->
     return false
 }
 
-sourcesUpToDate = { src, dest, srcsfx = ".java", destsfx = ".class" ->
-    def srcdir = new File(src)
-    def destdir = new File(dest)
+sourcesUpToDate = { src, dest, srcsfx = '.java', destsfx = '.class' ->
+    def srcdir = src instanceof File? src : new File(src.toString())
+    def destdir = dest instanceof File? dest : new File(dest.toString())
     def skipIt = new RuntimeException()
     try {
         srcdir.eachFileRecurse { sf ->

@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2010 the original author or authors.
+ * Copyright 2009-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the 'License');
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,50 @@
  * @author Andres Almiray
  */
 class LangBridgeGriffonPlugin {
-    def version = '0.4.3'
-    def dependsOn = [:]
-    def griffonVersion = '0.9.2 > *'
-    def license = 'Apache Software License 2.0'
-    def includes = ['src/ide-support']
+    // the plugin version
+    String version = '0.5'
+    // the version or versions of Griffon the plugin is designed for
+    String griffonVersion = '0.9.5 > *'
+    // the other plugins this plugin depends on
+    Map dependsOn = [:]
+    // resources that are included in plugin packaging
+    List pluginIncludes = []
+    // the plugin license
+    String license = 'Apache Software License 2.0'
+    // Toolkit compatibility. No value means compatible with all
+    // Valid values are: swing, javafx, swt, pivot, gtk
+    List toolkits = []
+    // Platform compatibility. No value means compatible with all
+    // Valid values are:
+    // linux, linux64, windows, windows64, macosx, macosx64, solaris
+    List platforms = []
+    // URL where documentation can be found
+    String documentation = ''
+    // URL where source can be found
+    String source = 'https://github.com/griffon/griffon-lang-bridge-plugin'
 
-    def author = 'Andres Almiray'
-    def authorEmail = 'aalmiray@user.sourceforge.net'
-    def title = 'Enables interoperability between JVM languages'
-    def description = '''
-Enables interoperability between JVM languages
+    List authors = [
+        [
+            name: 'Andres Almiray',
+            email: 'aalmiray@yahoo.com'
+        ]
+    ]
+    String title = 'Enables interoperability between JVM languages'
+    // accepts Markdown syntax. See http://daringfireball.net/projects/markdown/ for details
+    String description = '''
+The LangBridge plugin enables compiling commons Java/Groovy sources ahead of every other source available
+on a Griffon application. This allows other JVM lang plugins (like [Clojure][1], [Scala][2] for example)
+to implement/reference a common interface or POJO.
+
+Usage
+-----
+Upon installation the plugin will generate a directory at `$appdir/src/commons`, you can place the common
+code there. Compilation of that code is guaranteed to be done before any other compilation happens. However
+you may compile that code manually by invoking
+
+    griffon compile-commons
+
+[1]: /plugins/clojure
+[2]: /plugins/scala
 '''
-
-    // URL to the plugin's documentation
-    def documentation = 'http://griffon.codehaus.org/LangBridge+Plugin'
 }

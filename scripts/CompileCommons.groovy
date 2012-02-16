@@ -22,65 +22,10 @@
  * @since 0.1
  */
 
-includeTargets << griffonScript('_GriffonCompile')
+includePluginScript('lang-bridge', '_Commons')
 
-target(name: 'compileCommons', description: 'Compile common sources', prehook: null, posthook: null) {
-    depends(checkVersion, parseArguments, classpath)
-    def commons = "${basedir}/src/commons"
-    def commonsdir = new File(commons)
-    if(!commonsdir.exists()) return
-
-    ant.mkdir(dir: projectMainClassesDir)
-
-    def upToDate = true
-    if(hasSourcesOfType(commons, '.java'))
-        upToDate &= sourcesUpToDate(commons, projectMainClassesDir, '.java')
-    if(hasSourcesOfType(commons, '.groovy'))
-        upToDate &= sourcesUpToDate(commons, projectMainClassesDir, '.groovy')
-
-    if(!upToDate) {
-        ant.echo(message: "Compiling common sources to $classesDirPath")
-    
-        String classpathId = 'griffon.compile.classpath'
-        compileSources(projectMainClassesDir, classpathId) {
-            src(path: commons)
-            javac(classpathref: classpathId)
-        }
-    }
+target(name: 'compileCommonSources', description: 'Compile common sources', prehook: null, posthook: null) {
+    depends(compileCommons)
 }
 
-hasSourcesOfType = { src, srcsfx = '.java' ->
-    def srcdir = new File(src.toString())
-    def skipIt = new RuntimeException()
-    try {
-        srcdir.eachFileRecurse { sf ->
-            if(sf.isDirectory()) return
-            if(sf.toString().endsWith(srcsfx)) throw skipIt
-        }
-    } catch(x) {
-       if(x == skipIt) return true
-       throw x
-    }
-    return false
-}
-
-sourcesUpToDate = { src, dest, srcsfx = '.java', destsfx = '.class' ->
-    def srcdir = src instanceof File? src : new File(src.toString())
-    def destdir = dest instanceof File? dest : new File(dest.toString())
-    def skipIt = new RuntimeException()
-    try {
-        srcdir.eachFileRecurse { sf ->
-            if(sf.isDirectory()) return
-            if(!sf.toString().endsWith(srcsfx)) return
-            def target = new File(destdir.toString() + sf.toString().substring(srcdir.toString().length()) - srcsfx + destsfx)
-            if(!target.exists()) throw skipIt
-            if(sf.lastModified() > target.lastModified()) throw skipIt
-        }
-    } catch(x) {
-       if(x == skipIt) return false
-       throw x
-    }
-    return true
-}
-
-setDefaultTarget('compileCommons')
+setDefaultTarget('compileCommonSources')

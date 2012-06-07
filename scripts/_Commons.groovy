@@ -42,7 +42,7 @@ target(name: 'compileCommons', description: 'Compile common sources', prehook: n
         ant.echo(message: "Compiling common sources to $classesDirPath")
     
         String classpathId = 'griffon.compile.classpath'
-        compileSources(projectMainClassesDir, classpathId) {
+        compileProjectSources(griffonSettings.baseDir, projectMainClassesDir, classpathId) {
             src(path: commons)
             javac(classpathref: classpathId)
         }
